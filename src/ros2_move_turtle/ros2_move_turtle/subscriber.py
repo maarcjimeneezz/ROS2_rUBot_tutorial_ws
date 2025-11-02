@@ -17,7 +17,6 @@ class MinimalSubscriber(Node): # Definició de la classe MinimalSubscriber
         twist = Twist()
         if msg.x > 7.0 or msg.y > 7.0:
             twist.linear.x = 0.0
-            twist.angular.z = 0.0
             self.get_logger().info(f'Stopping turtle: x={msg.x:.2f}, y={msg.y:.2f}')
             self.publisher_.publish(twist)
 

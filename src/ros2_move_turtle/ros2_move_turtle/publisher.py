@@ -10,8 +10,7 @@ class MoveTurtle(Node): # definició de la classe MoveTurtle
 
     def timer_callback(self):
         msg = Twist()
-        msg.linear.x = 10.0      # Turtle moves forward 
-        msg.angular.z = 1.0     # Turtle starts rotating
+        msg.linear.x = 1.0      # Turtle moves forward 
         self.publisher_.publish(msg) # Publicar missatge
         self.get_logger().info('Publishing velocity') # imprimir missatge al terminal
 
