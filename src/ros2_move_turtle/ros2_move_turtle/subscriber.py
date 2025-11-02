@@ -1,19 +1,19 @@
 import rclpy # biblioteca Python para ROS2
 from rclpy.node import Node # Clase para crear NODEs
-from std_msgs.msg import String # Tipus de missatge per a cadenes de text a ROS2
+from geometry_msgs.msg import Twist
 
 class MinimalSubscriber(Node): # Definició de la classe MinimalSubscriber
     def __init__(self):
         super().__init__('turtlesim') # creació NODE turtlesim
         self.subscription = self.create_subscription(
-            String,
+            Twist,
             '/turtle1/cmd_vel',
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning
 
-    def listener_callback(self, msg): # Cada vez que llega un mensaje al topic, se llama a esta función
-        self.get_logger().info('I heard: "%s"' % msg.data)
+    def listener_callback(self, msg):
+        self.get_logger().info(f'I heard: linear.x={msg.linear.x}, angular.z={msg.angular.z}')
 
 def main(args=None):
     rclpy.init(args=args) # inicio ROS2
