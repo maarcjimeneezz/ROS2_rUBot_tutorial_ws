@@ -1,31 +1,36 @@
-import rclpy # biblioteca Python para ROS2
-from rclpy.node import Node # Clase para crear NODEs
+import rclpy
+from rclpy.node import Node
 from geometry_msgs.msg import Pose, Twist
 
-class MinimalSubscriber(Node): # Definició de la classe MinimalSubscriber
+class MinimalSubscriber(Node):
     def __init__(self):
-        super().__init__('turtlesim') # creació NODE turtlesim
+        super().__init__('turtlesim_subscriber')
+        
+        # Suscripción a la pose de la tortuga
         self.subscription = self.create_subscription(
             Pose,
             '/turtle1/pose',
             self.listener_callback,
             10)
-        # publisher to stop the turtle
+        
+        # Publisher para detener la tortuga
         self.publisher_ = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
 
     def listener_callback(self, msg):
         twist = Twist()
-        if msg.x > 7.0 or msg.y > 7.0:
+        
+        # Condición para detener la tortuga
+        if msg.x >= 7.0 or msg.y >= 7.0:
             twist.linear.x = 0.0
-            self.get_logger().info(f'Stopping turtle: x={msg.x:.2f}, y={msg.y:.2f}')
             self.publisher_.publish(twist)
+            self.get_logger().info(f'Stopping turtle at x={msg.x:.2f}, y={msg.y:.2f}')
 
 def main(args=None):
-    rclpy.init(args=args) # inicio ROS2
-    minimal_subscriber = MinimalSubscriber() # creo NODE MinimalSubscriber
-    rclpy.spin(minimal_subscriber) # mantiene el nodo activo y escuchando mensajes
-    minimal_subscriber.destroy_node() # destruye NODE al acabar
-    rclpy.shutdown() # apaga ROS2 al finalizar
+    rclpy.init(args=args)
+    minimal_subscriber = MinimalSubscriber()
+    rclpy.spin(minimal_subscriber)
+    minimal_subscriber.destroy_node()
+    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
