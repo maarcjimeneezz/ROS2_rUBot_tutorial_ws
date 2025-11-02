@@ -1,19 +1,25 @@
 import rclpy # biblioteca Python para ROS2
 from rclpy.node import Node # Clase para crear NODEs
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Pose, Twist
 
 class MinimalSubscriber(Node): # Definició de la classe MinimalSubscriber
     def __init__(self):
         super().__init__('turtlesim') # creació NODE turtlesim
         self.subscription = self.create_subscription(
-            Twist,
-            '/turtle1/cmd_vel',
+            Pose,
+            '/turtle1/pose',
             self.listener_callback,
             10)
-        self.subscription  # prevent unused variable warning
+        # publisher to stop the turtle
+        self.publisher_ = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
 
     def listener_callback(self, msg):
-        self.get_logger().info(f'I heard: linear.x={msg.linear.x}, angular.z={msg.angular.z}')
+        twist = Twist()
+        if msg.x > 7.0 or msg.y > 7.0:
+            twist.linear.x = 0.0
+            twist.angular.z = 0.0
+            self.get_logger().info(f'Stopping turtle: x={msg.x:.2f}, y={msg.y:.2f}')
+            self.publisher_.publish(twist)
 
 def main(args=None):
     rclpy.init(args=args) # inicio ROS2

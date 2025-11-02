@@ -5,17 +5,13 @@ from geometry_msgs.msg import Twist # Using twist function
 class MoveTurtle(Node): # definició de la classe MoveTurtle
     def __init__(self):
         super().__init__('move_turtle') # Initialize move_turtle NODE
-        
-        # Publishing /turtle1/cmd_vel to subscriber node
-        self.publisher_ = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
-        timer_period = 0.5 # Wait 0.5 s between
-        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.publisher_ = self.create_publisher(Twist, '/turtle1/cmd_vel', 10) # Publishing /turtle1/cmd_vel to subscriber node
+        self.timer = self.create_timer(0.5, self.timer_callback) # Wait 0.5 s between
 
     def timer_callback(self):
         msg = Twist()
         msg.linear.x = 2.0      # Turtle moves forward 2 u/s
         msg.angular.z = 1.0     # Turtle starts rotating 1 rad/s
-        
         self.publisher_.publish(msg) # Publicar missatge
         self.get_logger().info('Publishing velocity') # imprimir missatge al terminal
 
