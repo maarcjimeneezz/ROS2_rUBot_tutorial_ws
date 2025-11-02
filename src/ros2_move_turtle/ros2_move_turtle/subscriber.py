@@ -1,13 +1,10 @@
-import rclpy
-from rclpy.node import Node
+import rclpy # biblioteca Python para ROS2
+from rclpy.node import Node # Clase para crear NODEs
+from std_msgs.msg import String # Tipus de missatge per a cadenes de text a ROS2
 
-from std_msgs.msg import String
-
-
-class MinimalSubscriber(Node):
-
+class MinimalSubscriber(Node): # Definició de la classe MinimalSubscriber
     def __init__(self):
-        super().__init__('turtlesim')
+        super().__init__('turtlesim') # creació NODE turtlesim
         self.subscription = self.create_subscription(
             String,
             '/turtle1/cmd_vel',
@@ -15,23 +12,15 @@ class MinimalSubscriber(Node):
             10)
         self.subscription  # prevent unused variable warning
 
-    def listener_callback(self, msg):
+    def listener_callback(self, msg): # Cada vez que llega un mensaje al topic, se llama a esta función
         self.get_logger().info('I heard: "%s"' % msg.data)
 
-
 def main(args=None):
-    rclpy.init(args=args)
-
-    minimal_subscriber = MinimalSubscriber()
-
-    rclpy.spin(minimal_subscriber)
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    minimal_subscriber.destroy_node()
-    rclpy.shutdown()
-
+    rclpy.init(args=args) # inicio ROS2
+    minimal_subscriber = MinimalSubscriber() # creo NODE MinimalSubscriber
+    rclpy.spin(minimal_subscriber) # mantiene el nodo activo y escuchando mensajes
+    minimal_subscriber.destroy_node() # destruye NODE al acabar
+    rclpy.shutdown() # apaga ROS2 al finalizar
 
 if __name__ == '__main__':
     main()
